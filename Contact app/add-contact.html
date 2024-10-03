@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact Form</title>
+</head>
+<body>
+    <form id="editForm">
+        <label for="firstname">First name</label>
+        <input type="text" name="firstname" id="firstname" required><br/>
+
+        <label for="lastname">Last name</label>
+        <input type="text" name="lastname" id="lastname" required><br/>
+
+        <label for="mobile">Mobile</label>
+        <input type="text" name="mobile" id="mobile" required><br/>
+
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" required><br/>
+
+        <label for="avatar">Select a file</label>
+        <input type="file" name="avatar" id="avatar"><br/>
+
+        <button type="submit" id="submitForm">Submit</button><br/>
+        <button id="homeLink" type="button">Home</button>
+    </form>
+
+    <script src="config.js"></script>
+    <script>
+        // Function to handle form submission
+        function submitForm(e) {
+            e.preventDefault(); // Prevent default form submission behavior
+
+            // Collect the form data
+            const form = new FormData(document.querySelector('#editForm'));
+            form.append('apiKey', apiKey); // Assuming apiKey is available from config.js
+
+            // Make the POST request to insert contact
+            fetch(rootPath + 'controller/insert-contact', {
+                method: 'POST',
+                headers: { 'Accept': 'application/json' },
+                body: form
+            })
+            .then(function(response) {
+                return response.text(); // Parse the response as text
+            })
+            .then(function(data) {
+                if (data === "1") { // Success case
+                    alert("Contact added successfully.");
+                } else { // Handle errors
+                    alert("Error: " + data);
+                }
+            })
+            .catch(function(error) {
+                console.error('Error:', error); // Log any errors to the console
+            });
+        }
+
+        // Add event listener to the form submit button
+        document.getElementById("submitForm").addEventListener('click', submitForm);
+
+        // Function to handle the home button
+        document.getElementById("homeLink").addEventListener('click', function() {
+            window.open("index.html", "_self"); // Navigate to the home page
+        });
+    </script>
+</body>
+</html>
